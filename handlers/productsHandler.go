@@ -2,12 +2,17 @@ package handlers
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 	"strconv"
 
 	"github.com/JoaoVFerreira/GOproducts/db"
 	httpProduct "github.com/JoaoVFerreira/GOproducts/http"
 )
+
+var errorParsingData = "Error parsing data"
+var errorCreatingData = "Error when trying to creating data"
+
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
 	products, err := db.GetAll(); if err != nil {
@@ -22,7 +27,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responseJson, err := json.Marshal(&response); if err != nil {
-		http.Error(w, "Error parsing data", http.StatusInternalServerError)
+		http.Error(w, errorParsingData, http.StatusInternalServerError)
 	}
 
 	w.Write(responseJson)
@@ -48,8 +53,38 @@ func GetOneProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responseJson, err := json.Marshal(&response); if err != nil {
-		http.Error(w, "Error parsing data", http.StatusInternalServerError)
+		http.Error(w, errorParsingData, http.StatusInternalServerError)
 	}
 
+	w.Write(responseJson)
+}
+
+func CreateProduct(w http.ResponseWriter, r *http.Request) {
+	body, err := io.ReadAll(r.Body); if err != nil {
+		http.Error(w, "Body is required", http.StatusBadRequest)
+	}
+	defer r.Body.Close()
+	var p httpProduct.Product
+
+	if err := json.Unmarshal(body, &p); err != nil {
+		http.Error(w, errorParsingData, http.StatusInternalServerError)
+	}
+	w.Header().Set("Content-Type", "application/json")
+
+	p.Validate(w)
+
+	product, err := db.Create(p); if err != nil {
+		http.Error(w, errorCreatingData, http.StatusInternalServerError)
+	}
+
+	response := httpProduct.Response{
+		Message: "Product created with success!",
+		StatusCode: http.StatusOK,
+		Response: product,
+	}
+
+	responseJson, err := json.Marshal(&response); if err != nil {
+		http.Error(w, errorParsingData, http.StatusInternalServerError)
+	}
 	w.Write(responseJson)
 }

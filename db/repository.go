@@ -52,7 +52,7 @@ func Create(p httpProduct.Product) (* httpProduct.Product, error) {
 
 	p.ID = len(products) + 1
 	products = append(products, p)
-	pJson, err := json.Marshal(&p); if err != nil {
+	pJson, err := json.Marshal(&products); if err != nil {
 		log.Fatal("Error parsing data:", err)
 	}
 
