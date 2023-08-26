@@ -13,6 +13,7 @@ func main() {
 	mux.HandleFunc("/api/v1/products", handlers.GetProducts)
 	mux.HandleFunc("/api/v1/product", handlers.GetOneProduct)
 	mux.HandleFunc("/api/v1/products/create", handlers.CreateProduct)
+	mux.HandleFunc("/api/v1/products/delete", handlers.DeleteProduct)
 
 	// Server listening on 3000 
 	fmt.Println("Server listening on 3000")

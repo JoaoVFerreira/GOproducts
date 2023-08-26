@@ -88,3 +88,29 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write(responseJson)
 }
+
+func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	queryParams := r.URL.Query()
+	idParam := queryParams.Get("id")
+	w.Header().Set("Content-Type", "application/json")
+
+	id, err := strconv.Atoi(idParam); if err != nil {
+		http.Error(w, "Param is not processable", http.StatusUnprocessableEntity)
+	}
+
+	idRemoved, err := db.Delete(id); if err != nil {
+		http.Error(w, "Param is not processable", http.StatusNotFound)
+	}
+
+	response := httpProduct.Response{
+		Message: "Product deleted",
+		StatusCode: http.StatusOK,
+		Response: idRemoved,
+	}
+
+	responseJson, err := json.Marshal(&response); if err != nil {
+		http.Error(w, errorParsingData, http.StatusInternalServerError)
+	}
+
+	w.Write(responseJson)
+}

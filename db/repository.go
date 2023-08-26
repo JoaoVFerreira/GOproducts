@@ -59,3 +59,27 @@ func Create(p httpProduct.Product) (* httpProduct.Product, error) {
 	os.WriteFile("./db/db.json", pJson, 0666)
 	return &p, nil
 }
+
+func Delete(id int) (int, error) {
+	products, err := getData(); if err != nil {
+		return 0, err
+	}
+
+	idToRemove := -1
+	for i, p := range products {
+		if p.ID == id {
+			idToRemove = i
+			break
+		}
+	}
+
+	if idToRemove != -1 {
+		products = append(products[:idToRemove], products[idToRemove+1:]...)
+		pJson, err := json.Marshal(&products); if err != nil {
+			log.Fatal("Error parsing data:", err)
+		}
+		os.WriteFile("./db/db.json", pJson, 0666)
+		return id, nil
+	} 
+	return 0, nil
+}
