@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/JoaoVFerreira/GOproducts/db"
-	"github.com/JoaoVFerreira/GOproducts/request"
+	"github.com/JoaoVFerreira/GOproducts/httpProduct"
 )
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +15,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 
-	response := request.Response{
+	response := httpProduct.Response{
 		Message: "Product find with success!",
 		StatusCode: http.StatusOK,
 		Response: products,
@@ -41,7 +41,7 @@ func GetOneProduct(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Param is not processable", http.StatusNotFound)
 	}
 
-	response := request.Response{
+	response := httpProduct.Response{
 		Message: "Product find with success!",
 		StatusCode: http.StatusOK,
 		Response: product,

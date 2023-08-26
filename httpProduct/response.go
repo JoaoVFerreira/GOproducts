@@ -1,4 +1,4 @@
-package request
+package httpProduct
 
 type Response struct {
 	Message    string      `json:"message"`
