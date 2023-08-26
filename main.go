@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/JoaoVFerreira/GOproducts/handler"
+	"github.com/JoaoVFerreira/GOproducts/handlers"
 )
 
 func main() {
 	// Mux work as a router
 	mux := http.NewServeMux()
-	mux.HandleFunc("/api/v1/products", handler.GetProducts)
-	mux.HandleFunc("/api/v1/product", handler.GetOneProduct)
+	mux.HandleFunc("/api/v1/products", handlers.GetProducts)
+	mux.HandleFunc("/api/v1/product", handlers.GetOneProduct)
 
 	// Server listening on 3000 
 	fmt.Println("Server listening on 3000")

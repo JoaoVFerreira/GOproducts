@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/JoaoVFerreira/GOproducts/httpProduct"
+	httpProduct "github.com/JoaoVFerreira/GOproducts/http"
 )
 
 

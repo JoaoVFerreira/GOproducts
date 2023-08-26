@@ -1,4 +1,4 @@
-package httpProduct
+package http
 
 type rating struct {
 	Rate  float32 `json:"rate"`

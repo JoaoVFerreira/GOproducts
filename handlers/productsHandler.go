@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"encoding/json"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/JoaoVFerreira/GOproducts/db"
-	"github.com/JoaoVFerreira/GOproducts/httpProduct"
+	httpProduct "github.com/JoaoVFerreira/GOproducts/http"
 )
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
