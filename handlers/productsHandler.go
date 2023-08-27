@@ -10,8 +10,8 @@ import (
 	httpProduct "github.com/JoaoVFerreira/GOproducts/http"
 )
 
-var errorParsingData = "Error parsing data"
-var errorCreatingData = "Error when trying to creating data"
+const errorParsingData = "Error parsing data"
+const errorCreatingData = "Error when trying to creating data"
 
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
