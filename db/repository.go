@@ -8,16 +8,18 @@ import (
 	httpProduct "github.com/JoaoVFerreira/GOproducts/http"
 )
 
+const errorParsingData = "Error parsing data:"
+const dbPath = "./db/db.json"
 
 func getData() ([]httpProduct.Product, error) {
 	var products []httpProduct.Product
-	data, err := os.ReadFile("./db/db.json"); if err != nil {
+	data, err := os.ReadFile(dbPath); if err != nil {
 		log.Fatal("Error reading file:", err)
 		return nil, err
 	}
 	
 	err = json.Unmarshal(data, &products); if err != nil {
-		log.Fatal("Error parsing data:", err)
+		log.Fatal(errorParsingData, err)
 		return nil, err
 	}
 	return products, nil
@@ -53,10 +55,10 @@ func Create(p httpProduct.Product) (* httpProduct.Product, error) {
 	p.ID = len(products) + 1
 	products = append(products, p)
 	pJson, err := json.Marshal(&products); if err != nil {
-		log.Fatal("Error parsing data:", err)
+		log.Fatal(errorParsingData, err)
 	}
 
-	os.WriteFile("./db/db.json", pJson, 0666)
+	os.WriteFile(dbPath, pJson, 0666)
 	return &p, nil
 }
 
@@ -76,9 +78,9 @@ func Delete(id int) (int, error) {
 	if idToRemove != -1 {
 		products = append(products[:idToRemove], products[idToRemove+1:]...)
 		pJson, err := json.Marshal(&products); if err != nil {
-			log.Fatal("Error parsing data:", err)
+			log.Fatal(errorParsingData, err)
 		}
-		os.WriteFile("./db/db.json", pJson, 0666)
+		os.WriteFile(dbPath, pJson, 0666)
 		return id, nil
 	} 
 	return 0, nil

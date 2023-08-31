@@ -12,11 +12,13 @@ import (
 
 const errorParsingData = "Error parsing data"
 const errorCreatingData = "Error when trying to creating data"
+const notProcessableParam = "Param is not processable"
 
 
 func GetProducts(w http.ResponseWriter, r *http.Request) {
 	products, err := db.GetAll(); if err != nil {
 		http.Error(w, "Data not found", http.StatusNotFound)
+		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 
@@ -28,6 +30,7 @@ func GetProducts(w http.ResponseWriter, r *http.Request) {
 
 	responseJson, err := json.Marshal(&response); if err != nil {
 		http.Error(w, errorParsingData, http.StatusInternalServerError)
+		return
 	}
 
 	w.Write(responseJson)
@@ -39,11 +42,13 @@ func GetOneProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	id, err := strconv.Atoi(idParam); if err != nil {
-		http.Error(w, "Param is not processable", http.StatusUnprocessableEntity)
+		http.Error(w, notProcessableParam, http.StatusUnprocessableEntity)
+		return
 	}
 
 	product, err := db.GetOne(id); if err != nil {
-		http.Error(w, "Param is not processable", http.StatusNotFound)
+		http.Error(w, notProcessableParam, http.StatusNotFound)
+		return
 	}
 
 	response := httpProduct.Response{
@@ -54,6 +59,7 @@ func GetOneProduct(w http.ResponseWriter, r *http.Request) {
 
 	responseJson, err := json.Marshal(&response); if err != nil {
 		http.Error(w, errorParsingData, http.StatusInternalServerError)
+		return
 	}
 
 	w.Write(responseJson)
@@ -62,12 +68,14 @@ func GetOneProduct(w http.ResponseWriter, r *http.Request) {
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body); if err != nil {
 		http.Error(w, "Body is required", http.StatusBadRequest)
+		return
 	}
 	defer r.Body.Close()
 	var p httpProduct.Product
 
 	if err := json.Unmarshal(body, &p); err != nil {
 		http.Error(w, errorParsingData, http.StatusInternalServerError)
+		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 
@@ -75,6 +83,7 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 
 	product, err := db.Create(p); if err != nil {
 		http.Error(w, errorCreatingData, http.StatusInternalServerError)
+		return
 	}
 
 	response := httpProduct.Response{
@@ -95,11 +104,13 @@ func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	id, err := strconv.Atoi(idParam); if err != nil {
-		http.Error(w, "Param is not processable", http.StatusUnprocessableEntity)
+		http.Error(w, notProcessableParam, http.StatusUnprocessableEntity)
+		return
 	}
 
 	idRemoved, err := db.Delete(id); if err != nil {
-		http.Error(w, "Param is not processable", http.StatusNotFound)
+		http.Error(w, notProcessableParam, http.StatusNotFound)
+		return
 	}
 
 	response := httpProduct.Response{
