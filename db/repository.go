@@ -85,3 +85,49 @@ func Delete(id int) (int, error) {
 	} 
 	return 0, nil
 }
+
+func Update(id int, p httpProduct.Product) (* httpProduct.Product, error) {
+	products, err := getData()
+	if err != nil {
+		return nil, err
+	}
+
+	var foundProduct *httpProduct.Product
+
+	for i := range products {
+		if products[i].ID == id {
+			foundProduct = &products[i]
+			break
+		}
+	}
+	if p.Title != "" {
+		foundProduct.Title = p.Title
+	}
+	if p.Price != 0 {
+		foundProduct.Price = p.Price
+	}
+	if p.Description != "" {
+		foundProduct.Description = p.Description
+	}
+	if p.Category != "" {
+		foundProduct.Category = p.Category
+	}
+	if p.Rating != nil {
+		foundProduct.Rating = p.Rating
+	}
+	if foundProduct == nil {
+		return nil, err
+	}
+	
+	updatedData, err := json.MarshalIndent(products, "", "    ")
+	if err != nil {
+		return nil, err
+	}
+
+	err = os.WriteFile(dbPath, updatedData, 0644)
+	if err != nil {
+		return nil, err
+	}
+
+	return foundProduct, nil
+}
